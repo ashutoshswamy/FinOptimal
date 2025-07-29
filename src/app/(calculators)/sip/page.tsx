@@ -26,12 +26,12 @@ export default function SipCalculatorPage() {
   }));
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 md:space-y-10">
         <div>
             <h1 className="text-3xl font-bold font-headline">SIP Calculator</h1>
             <p className="text-muted-foreground">Estimate the future value of your monthly investments.</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
             <Card className="lg:col-span-1 h-fit">
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
@@ -60,28 +60,28 @@ export default function SipCalculatorPage() {
                     <CardTitle>Projections</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
-                        <div>
-                            <p className="text-muted-foreground">Total Investment</p>
-                            <p className="text-3xl font-bold">{formatCurrency(results.totalInvestment)}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center">
+                        <div className="space-y-1">
+                            <p className="text-muted-foreground text-sm">Total Investment</p>
+                            <p className="text-2xl font-bold">{formatCurrency(results.totalInvestment)}</p>
                         </div>
-                        <div>
-                            <p className="text-muted-foreground">Est. Returns</p>
-                            <p className="text-3xl font-bold text-green-600">{formatCurrency(results.estimatedReturns)}</p>
+                        <div className="space-y-1">
+                            <p className="text-muted-foreground text-sm">Est. Returns</p>
+                            <p className="text-2xl font-bold text-primary">{formatCurrency(results.estimatedReturns)}</p>
                         </div>
-                        <div>
-                            <p className="text-muted-foreground">Total Value</p>
-                            <p className="text-3xl font-bold text-primary">{formatCurrency(results.totalValue)}</p>
+                        <div className="space-y-1">
+                            <p className="text-muted-foreground text-sm">Total Value</p>
+                            <p className="text-2xl font-bold text-primary">{formatCurrency(results.totalValue)}</p>
                         </div>
                     </div>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="name" />
-                                <YAxis tickFormatter={(value) => formatCurrency(Number(value))}/>
+                                <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+                                <YAxis fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => formatCurrency(Number(value))}/>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))}/>
-                                <Legend />
+                                <Legend wrapperStyle={{fontSize: '0.875rem'}} />
                                 <Bar dataKey="Total Investment" stackId="a" fill="hsl(var(--muted-foreground))" />
                                 <Bar dataKey="Estimated Returns" stackId="a" fill="hsl(var(--primary))" />
                             </BarChart>
@@ -100,8 +100,8 @@ export default function SipCalculatorPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead className="w-[100px]">Year</TableHead>
-                            <TableHead>Total Investment</TableHead>
-                            <TableHead>Est. Returns</TableHead>
+                            <TableHead className="text-right">Total Investment</TableHead>
+                            <TableHead className="text-right">Est. Returns</TableHead>
                             <TableHead className="text-right">Total Value</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -109,8 +109,8 @@ export default function SipCalculatorPage() {
                         {results.breakdown.map((row) => (
                             <TableRow key={row.year}>
                                 <TableCell className="font-medium">{row.year}</TableCell>
-                                <TableCell>{formatCurrency(row.invested)}</TableCell>
-                                <TableCell>{formatCurrency(row.returns)}</TableCell>
+                                <TableCell className="text-right">{formatCurrency(row.invested)}</TableCell>
+                                <TableCell className="text-right">{formatCurrency(row.returns)}</TableCell>
                                 <TableCell className="text-right font-semibold">{formatCurrency(row.total)}</TableCell>
                             </TableRow>
                         ))}

@@ -26,12 +26,12 @@ export default function LumpsumCalculatorPage() {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 md:space-y-10">
         <div>
             <h1 className="text-3xl font-bold font-headline">Lumpsum Calculator</h1>
             <p className="text-muted-foreground">Calculate the future value of a one-time investment.</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
             <Card className="lg:col-span-1 h-fit">
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
@@ -81,7 +81,7 @@ export default function LumpsumCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                                <Legend wrapperStyle={{top: 230}}/>
+                                <Legend wrapperStyle={{fontSize: '0.875rem'}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
@@ -92,7 +92,7 @@ export default function LumpsumCalculatorPage() {
                         </div>
                         <div className="flex justify-between items-center border-b pb-4">
                             <span className="text-muted-foreground">Estimated Returns</span>
-                            <span className="font-bold text-lg text-green-600">{formatCurrency(results.estimatedReturns)}</span>
+                            <span className="font-bold text-lg text-primary">{formatCurrency(results.estimatedReturns)}</span>
                         </div>
                         <div className="flex justify-between items-center text-xl">
                             <span className="text-foreground">Total Value</span>

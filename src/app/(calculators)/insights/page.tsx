@@ -35,7 +35,7 @@ export default function InsightsPage() {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 md:space-y-10">
       <div>
         <h1 className="text-3xl font-bold font-headline flex items-center gap-2">
           <Sparkles className="text-accent" />
@@ -45,7 +45,7 @@ export default function InsightsPage() {
           Get AI-powered explanations for your financial questions and decisions.
         </p>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
         <Card>
           <CardHeader>
             <CardTitle>Describe Your Situation</CardTitle>

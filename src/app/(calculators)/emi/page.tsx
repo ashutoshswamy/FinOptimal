@@ -28,13 +28,13 @@ export default function EmiCalculatorPage() {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 md:space-y-10">
       <div>
         <h1 className="text-3xl font-bold font-headline">EMI Calculator</h1>
         <p className="text-muted-foreground">Calculate your monthly loan payments and see the full amortization schedule.</p>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-1 space-y-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
+        <div className="lg:col-span-1 space-y-8 md:space-y-10">
             <Card>
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
@@ -62,8 +62,8 @@ export default function EmiCalculatorPage() {
                 <CardHeader>
                     <CardTitle>Payment Summary</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-8">
-                    <div className="text-center">
+                <CardContent className="space-y-6">
+                    <div className="text-center space-y-2">
                         <p className="text-muted-foreground">Monthly EMI</p>
                         <p className="text-4xl font-bold text-primary">{formatCurrency(results.monthlyEMI)}</p>
                     </div>
@@ -76,7 +76,7 @@ export default function EmiCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))}/>
-                                <Legend wrapperStyle={{bottom: 0}}/>
+                                <Legend wrapperStyle={{fontSize: '0.875rem'}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
@@ -104,7 +104,7 @@ export default function EmiCalculatorPage() {
             <CardDescription>A month-by-month breakdown of your loan repayment.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[600px]">
+            <ScrollArea className="h-[600px] md:h-[720px]">
               <Table>
                 <TableHeader className="sticky top-0 bg-card">
                   <TableRow>
