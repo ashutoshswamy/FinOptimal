@@ -108,19 +108,19 @@ export default function EmiCalculatorPage() {
               <Table>
                 <TableHeader className="sticky top-0 bg-card">
                   <TableRow>
-                    <TableHead>Month</TableHead>
-                    <TableHead>Principal</TableHead>
-                    <TableHead>Interest</TableHead>
-                    <TableHead>Balance</TableHead>
+                    <TableHead className="w-[100px] text-left">Month</TableHead>
+                    <TableHead className="text-right">Principal</TableHead>
+                    <TableHead className="text-right">Interest</TableHead>
+                    <TableHead className="text-right">Balance</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {results.amortization.map((row) => (
                     <TableRow key={row.month}>
-                      <TableCell>{row.month}</TableCell>
-                      <TableCell>{formatCurrency(row.principal)}</TableCell>
-                      <TableCell>{formatCurrency(row.interest)}</TableCell>
-                      <TableCell>{formatCurrency(row.balance)}</TableCell>
+                      <TableCell className="text-left">{row.month}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(row.principal)}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(row.interest)}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(row.balance)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
