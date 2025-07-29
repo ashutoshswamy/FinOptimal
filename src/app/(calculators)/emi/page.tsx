@@ -39,7 +39,7 @@ export default function EmiCalculatorPage() {
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-8">
+                <CardContent className="space-y-6">
                     <div className="space-y-3">
                         <Label htmlFor="loan-amount">Loan Amount</Label>
                         <Input id="loan-amount" value={formatCurrency(loanAmount)} onChange={(e) => setLoanAmount(Number(e.target.value.replace(/[^0-9]/g, '')))} />
@@ -62,7 +62,7 @@ export default function EmiCalculatorPage() {
                 <CardHeader>
                     <CardTitle>Payment Summary</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-8">
                     <div className="text-center space-y-2">
                         <p className="text-muted-foreground">Monthly EMI</p>
                         <p className="text-4xl font-bold text-primary">{formatCurrency(results.monthlyEMI)}</p>
@@ -80,7 +80,7 @@ export default function EmiCalculatorPage() {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="space-y-4 border-t pt-6 mt-6">
+                    <div className="space-y-4 border-t pt-6">
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-muted-foreground">Principal Amount</span>
                             <span className="font-medium">{formatCurrency(loanAmount)}</span>
@@ -104,25 +104,25 @@ export default function EmiCalculatorPage() {
             <CardDescription>A month-by-month breakdown of your loan repayment.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[600px] md:h-[720px] -mx-6">
+            <ScrollArea className="h-full max-h-[720px] -mx-6">
               <Table className="w-full">
                 <TableHeader className="sticky top-0 bg-card">
                   <TableRow>
-                    <TableHead className="text-center w-1/5 font-medium">Month</TableHead>
-                    <TableHead className="text-center w-1/5 font-medium">Principal</TableHead>
-                    <TableHead className="text-center w-1/5 font-medium">Interest</TableHead>
-                    <TableHead className="text-center w-1/5 font-medium">Total Payment</TableHead>
-                    <TableHead className="text-center w-1/5 font-medium">Balance</TableHead>
+                    <TableHead className="w-1/5 px-2 text-center">Month</TableHead>
+                    <TableHead className="w-1/5 px-2 text-right">Principal</TableHead>
+                    <TableHead className="w-1/5 px-2 text-right">Interest</TableHead>
+                    <TableHead className="w-1/5 px-2 text-right">Total Payment</TableHead>
+                    <TableHead className="w-1/5 px-2 text-right">Balance</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {results.amortization.map((row) => (
                     <TableRow key={row.month}>
-                      <TableCell className="text-center font-medium">{row.month}</TableCell>
-                      <TableCell className="text-center">{formatCurrency(row.principal)}</TableCell>
-                      <TableCell className="text-center">{formatCurrency(row.interest)}</TableCell>
-                      <TableCell className="text-center">{formatCurrency(row.totalPayment)}</TableCell>
-                      <TableCell className="text-center font-medium">{formatCurrency(row.balance)}</TableCell>
+                      <TableCell className="px-2 text-center font-medium">{row.month}</TableCell>
+                      <TableCell className="px-2 text-right">{formatCurrency(row.principal)}</TableCell>
+                      <TableCell className="px-2 text-right">{formatCurrency(row.interest)}</TableCell>
+                      <TableCell className="px-2 text-right">{formatCurrency(row.totalPayment)}</TableCell>
+                      <TableCell className="px-2 text-right font-medium">{formatCurrency(row.balance)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
