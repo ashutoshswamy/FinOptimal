@@ -26,28 +26,28 @@ export default function LumpsumCalculatorPage() {
   ];
 
   return (
-    <div className="space-y-8 md:space-y-10">
+    <div className="space-y-6 md:space-y-8">
         <div>
-            <h1 className="text-3xl font-bold font-headline">Lumpsum Calculator</h1>
-            <p className="text-muted-foreground">Calculate the future value of a one-time investment.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline">Lumpsum Calculator</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Calculate the future value of a one-time investment.</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             <Card className="lg:col-span-1 h-fit">
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-8">
-                    <div className="space-y-3">
+                <CardContent className="space-y-6">
+                    <div className="space-y-2">
                         <Label htmlFor="principal">Total Investment</Label>
                         <Input id="principal" value={formatCurrency(principal)} onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, '')))} />
                         <Slider value={[principal]} onValueChange={(vals) => setPrincipal(vals[0])} max={10000000} step={10000} />
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         <Label htmlFor="period">Investment Period (Years)</Label>
                         <Input id="period" value={period} onChange={(e) => setPeriod(Number(e.target.value))} type="number" />
                         <Slider value={[period]} onValueChange={(vals) => setPeriod(vals[0])} max={40} step={1} />
                     </div>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                         <Label htmlFor="return-rate">Expected Return Rate (% p.a.)</Label>
                         <Input id="return-rate" value={returnRate} onChange={(e) => setReturnRate(Number(e.target.value))} type="number" />
                         <Slider value={[returnRate]} onValueChange={(vals) => setReturnRate(vals[0])} max={30} step={0.5} />
@@ -63,8 +63,8 @@ export default function LumpsumCalculatorPage() {
                         <span className="font-bold text-primary"> {formatCurrency(results.totalValue)}</span> in {period} years.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col md:flex-row items-center gap-8">
-                    <div className="w-full md:w-1/2 h-[250px]">
+                <CardContent className="flex flex-col md:flex-row items-center gap-6">
+                    <div className="w-full md:w-1/2 h-[200px] sm:h-[250px]">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
@@ -72,7 +72,7 @@ export default function LumpsumCalculatorPage() {
                                     cx="50%"
                                     cy="50%"
                                     labelLine={false}
-                                    outerRadius={100}
+                                    outerRadius={80}
                                     fill="#8884d8"
                                     dataKey="value"
                                 >
@@ -81,20 +81,20 @@ export default function LumpsumCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                                <Legend wrapperStyle={{fontSize: '0.875rem'}}/>
+                                <Legend wrapperStyle={{fontSize: '0.8rem', marginTop: '16px'}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
                     <div className="w-full md:w-1/2 space-y-4">
-                        <div className="flex justify-between items-center border-b pb-4">
-                            <span className="text-muted-foreground">Total Investment</span>
-                            <span className="font-bold text-lg">{formatCurrency(results.totalInvestment)}</span>
+                        <div className="flex justify-between items-center border-b pb-2">
+                            <span className="text-sm text-muted-foreground">Total Investment</span>
+                            <span className="font-semibold text-base sm:text-lg">{formatCurrency(results.totalInvestment)}</span>
                         </div>
-                        <div className="flex justify-between items-center border-b pb-4">
-                            <span className="text-muted-foreground">Estimated Returns</span>
-                            <span className="font-bold text-lg text-primary">{formatCurrency(results.estimatedReturns)}</span>
+                        <div className="flex justify-between items-center border-b pb-2">
+                            <span className="text-sm text-muted-foreground">Estimated Returns</span>
+                            <span className="font-semibold text-base sm:text-lg text-primary">{formatCurrency(results.estimatedReturns)}</span>
                         </div>
-                        <div className="flex justify-between items-center text-xl">
+                        <div className="flex justify-between items-center text-lg sm:text-xl">
                             <span className="text-foreground">Total Value</span>
                             <span className="font-bold text-primary">{formatCurrency(results.totalValue)}</span>
                         </div>

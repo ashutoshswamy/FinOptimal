@@ -48,7 +48,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Logo />
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenu className="p-2">
+          <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
@@ -67,20 +67,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-6 backdrop-blur-md md:px-8">
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-md sm:h-16 sm:px-6 md:px-8">
           <div className="flex items-center gap-4">
              <div className="md:hidden">
                 <Logo />
              </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="md:hidden">
                 <SidebarTrigger />
             </div>
             <ThemeToggle />
           </div>
         </header>
-        <main className="flex-1 p-6 md:p-8 lg:p-10">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10">
             {children}
         </main>
       </SidebarInset>
