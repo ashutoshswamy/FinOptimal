@@ -10,7 +10,7 @@ export default function TaxCalculatorPage() {
         <h1 className="text-3xl font-bold font-headline">Tax Calculator</h1>
         <p className="text-muted-foreground">Calculate your income tax liability under old and new regimes.</p>
       </div>
-      <Card className="flex flex-col items-center justify-center text-center py-20">
+      <Card className="flex flex-col items-center justify-center text-center py-24">
         <CardHeader>
           <Construction className="h-16 w-16 mx-auto text-muted-foreground" />
           <CardTitle className="mt-4">Coming Soon!</CardTitle>

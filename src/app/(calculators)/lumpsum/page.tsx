@@ -26,28 +26,28 @@ export default function LumpsumCalculatorPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
         <div>
             <h1 className="text-3xl font-bold font-headline">Lumpsum Calculator</h1>
             <p className="text-muted-foreground">Calculate the future value of a one-time investment.</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             <Card className="lg:col-span-1">
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="space-y-2">
+                <CardContent className="space-y-8">
+                    <div className="space-y-3">
                         <Label htmlFor="principal">Total Investment</Label>
                         <Input id="principal" value={formatCurrency(principal)} onChange={(e) => setPrincipal(Number(e.target.value.replace(/[^0-9]/g, '')))} />
                         <Slider value={[principal]} onValueChange={(vals) => setPrincipal(vals[0])} max={10000000} step={10000} />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         <Label htmlFor="period">Investment Period (Years)</Label>
                         <Input id="period" value={period} onChange={(e) => setPeriod(Number(e.target.value))} type="number" />
                         <Slider value={[period]} onValueChange={(vals) => setPeriod(vals[0])} max={40} step={1} />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         <Label htmlFor="return-rate">Expected Return Rate (% p.a.)</Label>
                         <Input id="return-rate" value={returnRate} onChange={(e) => setReturnRate(Number(e.target.value))} type="number" />
                         <Slider value={[returnRate]} onValueChange={(vals) => setReturnRate(vals[0])} max={30} step={0.5} />
@@ -86,15 +86,15 @@ export default function LumpsumCalculatorPage() {
                         </ResponsiveContainer>
                     </div>
                     <div className="w-full md:w-1/2 space-y-4">
-                        <div className="flex justify-between items-center border-b pb-2">
+                        <div className="flex justify-between items-center border-b pb-4">
                             <span className="text-muted-foreground">Total Investment</span>
-                            <span className="font-bold">{formatCurrency(results.totalInvestment)}</span>
+                            <span className="font-bold text-lg">{formatCurrency(results.totalInvestment)}</span>
                         </div>
-                        <div className="flex justify-between items-center border-b pb-2">
+                        <div className="flex justify-between items-center border-b pb-4">
                             <span className="text-muted-foreground">Estimated Returns</span>
-                            <span className="font-bold text-green-600">{formatCurrency(results.estimatedReturns)}</span>
+                            <span className="font-bold text-lg text-green-600">{formatCurrency(results.estimatedReturns)}</span>
                         </div>
-                        <div className="flex justify-between items-center text-lg">
+                        <div className="flex justify-between items-center text-xl">
                             <span className="text-foreground">Total Value</span>
                             <span className="font-bold text-primary">{formatCurrency(results.totalValue)}</span>
                         </div>

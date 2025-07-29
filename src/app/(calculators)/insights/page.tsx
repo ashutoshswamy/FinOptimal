@@ -35,7 +35,7 @@ export default function InsightsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-bold font-headline flex items-center gap-2">
           <Sparkles className="text-accent" />
@@ -45,7 +45,7 @@ export default function InsightsPage() {
           Get AI-powered explanations for your financial questions and decisions.
         </p>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <Card>
           <CardHeader>
             <CardTitle>Describe Your Situation</CardTitle>
@@ -54,8 +54,8 @@ export default function InsightsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-3">
                 <Label htmlFor="financial-situation">Financial Situation</Label>
                 <Textarea
                   id="financial-situation"
