@@ -80,13 +80,19 @@ export default function EmiCalculatorPage() {
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="flex justify-between items-center border-t pt-4">
-                        <span className="text-muted-foreground">Total Interest</span>
-                        <span className="font-semibold">{formatCurrency(results.totalInterest)}</span>
-                    </div>
-                     <div className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Total Payment</span>
-                        <span className="font-semibold">{formatCurrency(results.totalPayment)}</span>
+                    <div className="space-y-2 border-t pt-4">
+                        <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Principal Amount</span>
+                            <span className="font-semibold">{formatCurrency(loanAmount)}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Total Interest</span>
+                            <span className="font-semibold">{formatCurrency(results.totalInterest)}</span>
+                        </div>
+                         <div className="flex justify-between items-center font-bold text-lg border-t pt-2 mt-2">
+                            <span className="text-foreground">Total Payment</span>
+                            <span className="text-primary">{formatCurrency(results.totalPayment)}</span>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
