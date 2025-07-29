@@ -67,7 +67,7 @@ export default function EmiCalculatorPage() {
                         <p className="text-muted-foreground">Monthly EMI</p>
                         <p className="text-4xl font-bold text-primary">{formatCurrency(results.monthlyEMI)}</p>
                     </div>
-                     <div className="w-full h-[200px]">
+                     <div className="w-full h-[200px] mt-6">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie data={chartData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#8884d8" paddingAngle={5} dataKey="value">
@@ -76,11 +76,11 @@ export default function EmiCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))}/>
-                                <Legend wrapperStyle={{fontSize: '0.875rem'}}/>
+                                <Legend wrapperStyle={{fontSize: '0.875rem', paddingTop: '20px'}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="space-y-4 border-t pt-6">
+                    <div className="space-y-4 border-t pt-6 mt-6">
                         <div className="flex justify-between items-center text-sm">
                             <span className="text-muted-foreground">Principal Amount</span>
                             <span className="font-medium">{formatCurrency(loanAmount)}</span>
@@ -104,23 +104,25 @@ export default function EmiCalculatorPage() {
             <CardDescription>A month-by-month breakdown of your loan repayment.</CardDescription>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-[600px] md:h-[720px]">
-              <Table>
+            <ScrollArea className="h-[600px] md:h-[720px] -mx-6">
+              <Table className="w-full">
                 <TableHeader className="sticky top-0 bg-card">
                   <TableRow>
-                    <TableHead className="w-[100px] text-left font-medium">Month</TableHead>
-                    <TableHead className="text-right font-medium">Principal</TableHead>
-                    <TableHead className="text-right font-medium">Interest</TableHead>
-                    <TableHead className="text-right font-medium">Balance</TableHead>
+                    <TableHead className="text-center w-1/5 font-medium">Month</TableHead>
+                    <TableHead className="text-center w-1/5 font-medium">Principal</TableHead>
+                    <TableHead className="text-center w-1/5 font-medium">Interest</TableHead>
+                    <TableHead className="text-center w-1/5 font-medium">Total Payment</TableHead>
+                    <TableHead className="text-center w-1/5 font-medium">Balance</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {results.amortization.map((row) => (
                     <TableRow key={row.month}>
-                      <TableCell className="text-left font-medium">{row.month}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(row.principal)}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(row.interest)}</TableCell>
-                      <TableCell className="text-right font-medium">{formatCurrency(row.balance)}</TableCell>
+                      <TableCell className="text-center font-medium">{row.month}</TableCell>
+                      <TableCell className="text-center">{formatCurrency(row.principal)}</TableCell>
+                      <TableCell className="text-center">{formatCurrency(row.interest)}</TableCell>
+                      <TableCell className="text-center">{formatCurrency(row.totalPayment)}</TableCell>
+                      <TableCell className="text-center font-medium">{formatCurrency(row.balance)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
