@@ -18,8 +18,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-space-grotesk)', 'sans-serif'],
-        headline: ['var(--font-space-grotesk)', 'sans-serif'],
+        sans: ['var(--font-poppins)', 'sans-serif'],
+        headline: ['var(--font-poppins)', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
