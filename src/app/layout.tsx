@@ -1,17 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter, Lexend } from 'next/font/google';
+import { Space_Grotesk as SpaceGrotesk } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
-const inter = Inter({
+const spaceGrotesk = SpaceGrotesk({
   subsets: ['latin'],
-  variable: '--font-inter',
-});
-
-const lexend = Lexend({
-  subsets: ['latin'],
-  variable: '--font-lexend',
+  variable: '--font-space-grotesk',
 });
 
 export const metadata: Metadata = {
@@ -26,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${lexend.variable} font-sans antialiased`}>
+      <body className={`${spaceGrotesk.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />
