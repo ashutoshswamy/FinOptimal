@@ -32,7 +32,7 @@ export default function LumpsumCalculatorPage() {
             <p className="text-muted-foreground">Calculate the future value of a one-time investment.</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <Card className="lg:col-span-1">
+            <Card className="lg:col-span-1 h-fit">
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
                 </CardHeader>
@@ -81,7 +81,7 @@ export default function LumpsumCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))} />
-                                <Legend />
+                                <Legend wrapperStyle={{top: 230}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>

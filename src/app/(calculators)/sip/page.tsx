@@ -32,7 +32,7 @@ export default function SipCalculatorPage() {
             <p className="text-muted-foreground">Estimate the future value of your monthly investments.</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <Card className="lg:col-span-1">
+            <Card className="lg:col-span-1 h-fit">
                 <CardHeader>
                     <CardTitle>Parameters</CardTitle>
                 </CardHeader>

@@ -76,11 +76,11 @@ export default function EmiCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))}/>
-                                <Legend />
+                                <Legend wrapperStyle={{top: 180}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="space-y-2 border-t pt-4">
+                    <div className="space-y-2 border-t pt-4 mt-8">
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Principal Amount</span>
                             <span className="font-semibold">{formatCurrency(loanAmount)}</span>
