@@ -62,7 +62,7 @@ export default function EmiCalculatorPage() {
                 <CardHeader>
                     <CardTitle>Payment Summary</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-8">
                     <div className="text-center">
                         <p className="text-muted-foreground">Monthly EMI</p>
                         <p className="text-4xl font-bold text-primary">{formatCurrency(results.monthlyEMI)}</p>
@@ -76,20 +76,20 @@ export default function EmiCalculatorPage() {
                                     ))}
                                 </Pie>
                                 <Tooltip formatter={(value) => formatCurrency(Number(value))}/>
-                                <Legend wrapperStyle={{top: 180}}/>
+                                <Legend wrapperStyle={{bottom: 0}}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
-                    <div className="space-y-2 border-t pt-4 mt-8">
-                        <div className="flex justify-between items-center">
+                    <div className="space-y-4 border-t pt-6">
+                        <div className="flex justify-between items-center text-sm">
                             <span className="text-muted-foreground">Principal Amount</span>
-                            <span className="font-semibold">{formatCurrency(loanAmount)}</span>
+                            <span className="font-medium">{formatCurrency(loanAmount)}</span>
                         </div>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center text-sm">
                             <span className="text-muted-foreground">Total Interest</span>
-                            <span className="font-semibold">{formatCurrency(results.totalInterest)}</span>
+                            <span className="font-medium">{formatCurrency(results.totalInterest)}</span>
                         </div>
-                         <div className="flex justify-between items-center font-bold text-lg border-t pt-2 mt-2">
+                         <div className="flex justify-between items-center font-bold text-lg border-t pt-4 mt-4">
                             <span className="text-foreground">Total Payment</span>
                             <span className="text-primary">{formatCurrency(results.totalPayment)}</span>
                         </div>
@@ -108,19 +108,19 @@ export default function EmiCalculatorPage() {
               <Table>
                 <TableHeader className="sticky top-0 bg-card">
                   <TableRow>
-                    <TableHead className="w-[100px] text-left">Month</TableHead>
-                    <TableHead className="text-right">Principal</TableHead>
-                    <TableHead className="text-right">Interest</TableHead>
-                    <TableHead className="text-right">Balance</TableHead>
+                    <TableHead className="w-[100px] text-left font-medium">Month</TableHead>
+                    <TableHead className="text-right font-medium">Principal</TableHead>
+                    <TableHead className="text-right font-medium">Interest</TableHead>
+                    <TableHead className="text-right font-medium">Balance</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {results.amortization.map((row) => (
                     <TableRow key={row.month}>
-                      <TableCell className="text-left">{row.month}</TableCell>
+                      <TableCell className="text-left font-medium">{row.month}</TableCell>
                       <TableCell className="text-right">{formatCurrency(row.principal)}</TableCell>
                       <TableCell className="text-right">{formatCurrency(row.interest)}</TableCell>
-                      <TableCell className="text-right">{formatCurrency(row.balance)}</TableCell>
+                      <TableCell className="text-right font-medium">{formatCurrency(row.balance)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
