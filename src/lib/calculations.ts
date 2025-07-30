@@ -32,6 +32,47 @@ export const calculateSip = (monthlyInvestment: number, years: number, rateOfRet
   return { totalInvestment, totalValue, estimatedReturns, breakdown };
 };
 
+export interface StepUpSIPResult {
+  totalInvestment: number;
+  totalValue: number;
+  estimatedReturns: number;
+  breakdown: { year: number; yearlyInvestment: number; invested: number; returns: number; total: number }[];
+}
+
+export const calculateStepUpSip = (initialMonthlyInvestment: number, years: number, rateOfReturn: number, stepUpPercentage: number): StepUpSIPResult => {
+  const monthlyRate = rateOfReturn / 100 / 12;
+  let totalInvestment = 0;
+  let futureValue = 0;
+  let currentMonthlyInvestment = initialMonthlyInvestment;
+  const breakdown: StepUpSIPResult['breakdown'] = [];
+
+  for (let year = 1; year <= years; year++) {
+    let yearlyInvestment = 0;
+    for (let month = 1; month <= 12; month++) {
+      futureValue = (futureValue + currentMonthlyInvestment) * (1 + monthlyRate);
+      totalInvestment += currentMonthlyInvestment;
+      yearlyInvestment += currentMonthlyInvestment;
+    }
+    
+    breakdown.push({
+      year,
+      yearlyInvestment,
+      invested: totalInvestment,
+      returns: futureValue - totalInvestment,
+      total: futureValue,
+    });
+    
+    currentMonthlyInvestment *= (1 + stepUpPercentage / 100);
+  }
+
+  return {
+    totalInvestment,
+    totalValue: futureValue,
+    estimatedReturns: futureValue - totalInvestment,
+    breakdown,
+  };
+};
+
 export interface LumpsumResult {
     totalValue: number;
     totalInvestment: number;
@@ -205,9 +246,11 @@ export const calculateTax = (input: TaxInput): { oldRegime: TaxResult, newRegime
                 const taxInSlab = taxableInSlab * slab.rate;
                 tax += taxInSlab;
                 remainingIncome -= taxableInSlab;
-                 slabDetails.push({ slab: `₹${lastLimit/100000}L - ₹${slab.limit/100000}L @ ${slab.rate * 100}%`, tax: taxInSlab });
+                 slabDetails.push({ slab: `₹${lastLimit/100000}L - ₹${slab.limit === Infinity ? 'Above' : slab.limit/100000+'L'} @ ${slab.rate * 100}%`, tax: taxInSlab });
                 lastLimit = slab.limit;
-                if (taxableInSlab === 0 && slab.rate > 0) break;
+                if (taxable <= lastLimit && slab.rate > 0 && taxableInSlab === 0) break;
+            } else if (taxable < slab.limit) {
+                slabDetails.push({ slab: `₹${lastLimit/100000}L - ₹${slab.limit === Infinity ? 'Above' : slab.limit/100000+'L'} @ ${slab.rate * 100}%`, tax: 0 });
             }
         }
         
@@ -259,10 +302,23 @@ export const calculateRetirement = (input: RetirementInput): RetirementResult =>
   const monthlyExpensesAtRetirement = monthlyExpenses * Math.pow(1 + inflationRate / 100, yearsToRetire);
 
   // Corpus needed at retirement (using real rate of return)
-  const realReturnRate = ((1 + postRetirementRate / 100) / (1 + inflationRate / 100) - 1) * 100;
+  const realReturnRate = ((1 + postRetirementRate / 100) / (1 + inflationRate / 100) - 1);
+
+  if (realReturnRate === 0) {
+    // Simplified calculation for zero real return rate
+    const corpusRequired = (monthlyExpensesAtRetirement * 12) * yearsInRetirement;
+    return {
+      corpusRequired,
+      corpusProjected: 0,
+      difference: -corpusRequired,
+      monthlyExpensesAtRetirement,
+      additionalMonthlyInvestmentNeeded: 0
+    };
+  }
+
   // PV of an annuity formula
-  const corpusRequired = (monthlyExpensesAtRetirement * 12) *
-                       ((1 - Math.pow(1 + realReturnRate / 100, -yearsInRetirement)) / (realReturnRate / 100));
+  const corpusRequired = (monthlyExpensesAtRetirement * 12) * ((1 - Math.pow(1 + realReturnRate, -yearsInRetirement)) / realReturnRate);
+
 
   // Projected corpus from current savings
   const fvOfCurrentSavings = currentSavings * Math.pow(1 + preRetirementRate / 100, yearsToRetire);
@@ -270,8 +326,7 @@ export const calculateRetirement = (input: RetirementInput): RetirementResult =>
   // Projected corpus from future investments
   const monthlyPreRetirementRate = preRetirementRate / 100 / 12;
   const fvOfFutureInvestments = monthlyInvestment *
-                                ((Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) / monthlyPreRetirementRate) *
-                                (1 + monthlyPreRetirementRate);
+                                ((Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) / monthlyPreRetirementRate);
 
   const corpusProjected = fvOfCurrentSavings + fvOfFutureInvestments;
 
@@ -289,5 +344,78 @@ export const calculateRetirement = (input: RetirementInput): RetirementResult =>
     difference: Math.abs(difference),
     monthlyExpensesAtRetirement,
     additionalMonthlyInvestmentNeeded
+  };
+};
+
+export interface SWPResult {
+  totalWithdrawal: number;
+  totalInterest: number;
+  finalBalance: number;
+  breakdown: { year: number; balance: number }[];
+}
+
+export const calculateSwp = (initialInvestment: number, monthlyWithdrawal: number, annualReturnRate: number, years: number): SWPResult => {
+  const monthlyRate = annualReturnRate / 100 / 12;
+  const months = years * 12;
+  let balance = initialInvestment;
+  const breakdown: SWPResult['breakdown'] = [];
+
+  for (let month = 1; month <= months; month++) {
+    balance += balance * monthlyRate; // Add interest
+    balance -= monthlyWithdrawal; // Subtract withdrawal
+
+    if (month % 12 === 0) {
+      breakdown.push({ year: month / 12, balance: Math.max(0, balance) });
+    }
+  }
+
+  const totalWithdrawal = monthlyWithdrawal * months;
+  const finalBalance = Math.max(0, balance);
+  const totalInterest = finalBalance + totalWithdrawal - initialInvestment;
+
+  return { totalWithdrawal, totalInterest, finalBalance, breakdown };
+};
+
+export interface NPSInput {
+  monthlyInvestment: number;
+  currentAge: number;
+  retirementAge: number;
+  returnRate: number;
+  annuityPercentage: number;
+  annuityRate: number;
+}
+
+export interface NPSResult {
+  totalInvestment: number;
+  totalInterest: number;
+  totalCorpus: number;
+  lumpSumValue: number;
+  monthlyPension: number;
+}
+
+export const calculateNps = (input: NPSInput): NPSResult => {
+  const { monthlyInvestment, currentAge, retirementAge, returnRate, annuityPercentage, annuityRate } = input;
+  
+  const investmentPeriod = retirementAge - currentAge;
+  const months = investmentPeriod * 12;
+  const monthlyRate = returnRate / 100 / 12;
+  
+  const totalCorpus = monthlyInvestment * (((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate) * (1 + monthlyRate));
+  
+  const totalInvestment = monthlyInvestment * months;
+  const totalInterest = totalCorpus - totalInvestment;
+  
+  const annuityValue = totalCorpus * (annuityPercentage / 100);
+  const lumpSumValue = totalCorpus - annuityValue;
+  
+  const monthlyAnnuityRate = annuityRate / 100 / 12;
+  const monthlyPension = annuityValue * monthlyAnnuityRate;
+
+  return {
+    totalInvestment,
+    totalInterest,
+    totalCorpus,
+    lumpSumValue,
+    monthlyPension,
   };
 };
