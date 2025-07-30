@@ -32,68 +32,12 @@ The application includes a wide array of calculators designed for various financ
 ### AI-Powered Insights
 - **Financial Insight Generator**: Leverages Generative AI (via Genkit) to provide plain-English explanations for complex financial situations and decisions.
 
-## 🚀 Tech Stack
+## 🤝 Connect with Us
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **UI Components**: [ShadCN UI](https://ui.shadcn.com/)
-- **AI Integration**: [Genkit](https://firebase.google.com/docs/genkit)
-- **Charts**: [Recharts](https://recharts.org/)
+This project was developed by Ashutosh Swamy. You can connect with him here:
 
-## ⚙️ Getting Started
-
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/en/) (v18 or newer recommended)
-- `npm` or `yarn`
-
-### Installation
-
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/your-username/finoptimal.git
-   cd finoptimal
-   ```
-
-2. **Install NPM packages:**
-   ```sh
-   npm install
-   ```
-
-3. **Set up environment variables:**
-   Create a `.env.local` file in the root of the project and add your Genkit/Google AI API keys if you intend to use the AI features.
-   ```env
-   GEMINI_API_KEY=YOUR_API_KEY
-   ```
-
-### Running the Application
-
-- **Development Server:**
-  To run the app in development mode with hot-reloading:
-  ```sh
-  npm run dev
-  ```
-  Open [http://localhost:9002](http://localhost:9002) to view it in the browser.
-
-- **Genkit Development Server:**
-  To run the Genkit flows locally for testing AI features:
-  ```sh
-  npm run genkit:dev
-  ```
-
-- **Production Build:**
-  To build the application for production:
-  ```sh
-  npm run build
-  ```
-  To start the production server:
-  ```sh
-  npm run start
-  ```
-
-## 🤝 Contributing
+- **GitHub**: [ashutoshswamy](https://github.com/ashutoshswamy)
+- **LinkedIn**: [ashutoshswamy](https://linkedin.com/in/ashutoshswamy)
+- **Twitter**: [@ashutoshswamy_](https://twitter.com/ashutoshswamy_)
 
 Contributions are welcome! If you have suggestions for improvements or new features, feel free to open an issue or submit a pull request.
