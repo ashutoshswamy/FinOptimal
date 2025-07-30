@@ -703,3 +703,101 @@ export const calculateFOMargin = (input: FOMarginInput): FOMarginResult => {
     exposureMargin,
   };
 };
+
+export interface EquityMarginInput {
+  optionType: 'call' | 'put';
+  positionType: 'long' | 'short';
+  underlyingPrice: number;
+  strikePrice: number;
+  lotSize: number;
+  volatility: number; // percentage
+}
+
+export interface EquityMarginResult {
+  contractValue: number;
+  optionPremium: number;
+  spanMargin: number;
+  exposureMargin: number;
+  totalMargin: number;
+}
+
+export const calculateEquityMargin = (input: EquityMarginInput): EquityMarginResult => {
+  const { optionType, positionType, underlyingPrice, strikePrice, lotSize, volatility } = input;
+  
+  const contractValue = underlyingPrice * lotSize;
+
+  // Use Black-Scholes for premium calculation. Assume 1 week to expiry and 5% risk-free rate.
+  const bsResult = calculateBlackScholes({
+    stockPrice: underlyingPrice,
+    strikePrice: strikePrice,
+    timeToExpiry: 7 / 365,
+    volatility: volatility,
+    riskFreeRate: 5,
+  });
+
+  const optionPrice = optionType === 'call' ? bsResult.callPrice : bsResult.putPrice;
+  const optionPremium = optionPrice * lotSize;
+  
+  if (positionType === 'long') {
+    // For long positions, margin is just the premium paid.
+    return {
+      contractValue,
+      optionPremium,
+      spanMargin: 0,
+      exposureMargin: 0,
+      totalMargin: optionPremium
+    };
+  }
+
+  // Simplified Short Position Margin
+  // SPAN is conceptually based on max potential loss. A simple proxy:
+  const spanMargin = Math.max(
+    // Scenario 1: Volatility up
+    (underlyingPrice * (volatility / 100) * 2) * lotSize * 0.15, // Simplified VaR
+    // Scenario 2: Price moves against position
+    (Math.abs(strikePrice - underlyingPrice) + (underlyingPrice * 0.05)) * lotSize
+  ) * 0.5; // Heuristic scaling
+
+  // Exposure margin is a percentage of the contract value
+  const exposureMargin = contractValue * 0.10; // 10% exposure margin
+  
+  const totalMargin = spanMargin + exposureMargin;
+
+  return {
+    contractValue,
+    optionPremium,
+    spanMargin,
+    exposureMargin,
+    totalMargin,
+  };
+}
+
+export interface CommodityMarginInput {
+  commodityPrice: number;
+  lotSize: number;
+  spanFactor: number; // %
+  exposureFactor: number; // %
+}
+
+export interface CommodityMarginResult {
+  contractValue: number;
+  spanMargin: number;
+  exposureMargin: number;
+  totalMargin: number;
+}
+
+export const calculateCommodityMargin = (input: CommodityMarginInput): CommodityMarginResult => {
+  const { commodityPrice, lotSize, spanFactor, exposureFactor } = input;
+
+  const contractValue = commodityPrice * lotSize;
+  const spanMargin = contractValue * (spanFactor / 100);
+  const exposureMargin = contractValue * (exposureFactor / 100);
+  const totalMargin = spanMargin + exposureMargin;
+  
+  return {
+    contractValue,
+    spanMargin,
+    exposureMargin,
+    totalMargin
+  };
+}
