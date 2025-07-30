@@ -15,6 +15,7 @@ import {
 import { Logo } from "@/components/logo"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Home } from "lucide-react"
+import { Footer } from "@/components/footer"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
 
@@ -31,6 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 p-4 sm:p-6 md:p-8 lg:p-10">
             {children}
         </main>
+        <Footer />
     </div>
   )
 }

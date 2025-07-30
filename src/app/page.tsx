@@ -22,6 +22,7 @@ import {
   ReceiptText,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Footer } from "@/components/footer"
 
 const calculators = [
   // Investment
@@ -62,8 +63,8 @@ function CalculatorLink({ href, icon: Icon, label }: { href: string, icon: React
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col gap-12 md:gap-16 lg:gap-20">
-      <header className="flex flex-col items-center justify-center text-center gap-6 py-12 md:py-20">
+    <div className="flex flex-col min-h-screen">
+      <header className="flex flex-col items-center justify-center text-center gap-6 py-12 md:py-20 px-4">
         <div className="space-y-4">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-headline tracking-tight">
                 Financial Clarity, Simplified.
@@ -88,7 +89,7 @@ export default function HomePage() {
         </div>
       </header>
       
-      <main id="calculators" className="space-y-12 md:space-y-16">
+      <main id="calculators" className="space-y-12 md:space-y-16 px-4 flex-grow">
          <section className="space-y-8">
             <h2 className="text-3xl sm:text-4xl font-bold font-headline text-center">Our Calculators</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
@@ -96,6 +97,7 @@ export default function HomePage() {
             </div>
         </section>
       </main>
+      <Footer />
     </div>
   )
 }
