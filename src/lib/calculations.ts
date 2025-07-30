@@ -801,3 +801,37 @@ export const calculateCommodityMargin = (input: CommodityMarginInput): Commodity
     totalMargin
   };
 }
+
+export interface CurrencyDerivativesMarginInput {
+  usdinrPrice: number;
+  lotSize: number; // in USD
+  spanPercent: number;
+  exposurePercent: number;
+}
+
+export interface CurrencyDerivativesMarginResult {
+  contractValue: number;
+  spanMargin: number;
+  exposureMargin: number;
+  totalMargin: number;
+}
+
+export const calculateCurrencyDerivativesMargin = (input: CurrencyDerivativesMarginInput): CurrencyDerivativesMarginResult => {
+  const { usdinrPrice, lotSize, spanPercent, exposurePercent } = input;
+
+  if (usdinrPrice <= 0 || lotSize <= 0) {
+    return { contractValue: 0, spanMargin: 0, exposureMargin: 0, totalMargin: 0 };
+  }
+
+  const contractValue = usdinrPrice * lotSize;
+  const spanMargin = contractValue * (spanPercent / 100);
+  const exposureMargin = contractValue * (exposurePercent / 100);
+  const totalMargin = spanMargin + exposureMargin;
+  
+  return {
+    contractValue,
+    spanMargin,
+    exposureMargin,
+    totalMargin
+  };
+}
