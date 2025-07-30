@@ -1,17 +1,39 @@
 "use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ArrowLeft, Construction } from "lucide-react";
 
-export default function ComingSoonPage() {
+export default function MtfCalculatorPage() {
   return (
-    <div className="flex items-center justify-center h-full">
-      <Card className="w-full max-w-md text-center">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold">Coming Soon</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-muted-foreground">This calculator is under construction. Please check back later!</p>
-        </CardContent>
-      </Card>
+    <div className="space-y-6 md:space-y-8">
+      <div className="flex items-center gap-4">
+        <Button asChild variant="outline" size="icon">
+          <Link href="/">
+            <ArrowLeft />
+          </Link>
+        </Button>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold font-headline">MTF Calculator</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Margin Trading Facility Calculator.</p>
+        </div>
+      </div>
+      <div className="flex items-center justify-center h-full py-16">
+        <Card className="w-full max-w-lg text-center">
+          <CardHeader>
+             <div className="mx-auto bg-primary/10 p-4 rounded-full">
+                <Construction className="w-12 h-12 text-primary" />
+             </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <CardTitle className="text-2xl font-bold">Coming Soon</CardTitle>
+            <CardDescription className="text-muted-foreground">
+              This calculator is under construction. We are working hard to bring it to you.
+              It will help you calculate the margin required for your trades. Please check back later!
+            </CardDescription>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

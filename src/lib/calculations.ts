@@ -427,3 +427,154 @@ export const calculateNps = (input: NPSInput): NPSResult => {
     monthlyPension,
   };
 };
+
+// Function to calculate Normal Cumulative Distribution Function (CDF)
+const normalCdf = (x: number): number => {
+    // Using the Abramowitz and Stegun approximation
+    const b1 =  0.319381530;
+    const b2 = -0.356563782;
+    const b3 =  1.781477937;
+    const b4 = -1.821255978;
+    const b5 =  1.330274429;
+    const p  =  0.2316419;
+    const c  =  0.39894228;
+
+    if (x >= 0.0) {
+        const t = 1.0 / (1.0 + p * x);
+        return (1.0 - c * Math.exp(-x * x / 2.0) * t * (t * (t * (t * (t * b5 + b4) + b3) + b2) + b1));
+    } else {
+        const t = 1.0 / (1.0 - p * x);
+        return (c * Math.exp(-x * x / 2.0) * t * (t * (t * (t * (t * b5 + b4) + b3) + b2) + b1));
+    }
+}
+
+export interface BlackScholesInput {
+    stockPrice: number;
+    strikePrice: number;
+    timeToExpiry: number; // in years
+    volatility: number; // as a percentage
+    riskFreeRate: number; // as a percentage
+}
+
+export interface BlackScholesResult {
+    callPrice: number;
+    putPrice: number;
+    callDelta: number;
+    putDelta: number;
+    gamma: number;
+    vega: number;
+    theta: number;
+    rho: number;
+}
+
+export const calculateBlackScholes = (input: BlackScholesInput): BlackScholesResult => {
+    const { stockPrice: S, strikePrice: K, timeToExpiry: T, volatility: vol, riskFreeRate: r } = input;
+
+    const volPct = vol / 100;
+    const rPct = r / 100;
+
+    if (T <= 0 || S <= 0 || K <= 0 || vol <= 0) {
+        return { callPrice: 0, putPrice: 0, callDelta: 0, putDelta: 0, gamma: 0, vega: 0, theta: 0, rho: 0 };
+    }
+
+    const d1 = (Math.log(S / K) + (rPct + (volPct * volPct) / 2) * T) / (volPct * Math.sqrt(T));
+    const d2 = d1 - volPct * Math.sqrt(T);
+
+    const N_d1 = normalCdf(d1);
+    const N_d2 = normalCdf(d2);
+    const N_minus_d1 = normalCdf(-d1);
+    const N_minus_d2 = normalCdf(-d2);
+    
+    const callPrice = S * N_d1 - K * Math.exp(-rPct * T) * N_d2;
+    const putPrice = K * Math.exp(-rPct * T) * N_minus_d2 - S * N_minus_d1;
+
+    // Greeks
+    const callDelta = N_d1;
+    const putDelta = N_d1 - 1;
+    const normalPdf_d1 = (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-(d1 * d1) / 2);
+    const gamma = normalPdf_d1 / (S * volPct * Math.sqrt(T));
+    const vega = S * normalPdf_d1 * Math.sqrt(T) / 100; // per 1% change in vol
+    const theta = -((S * normalPdf_d1 * volPct) / (2 * Math.sqrt(T))) - rPct * K * Math.exp(-rPct * T) * N_d2; // per year
+    const rho = K * T * Math.exp(-rPct * T) * N_d2 / 100; // per 1% change in rate
+
+    return {
+        callPrice,
+        putPrice,
+        callDelta,
+        putDelta,
+        gamma,
+        vega,
+        theta: theta / 365, // daily theta
+        rho,
+    };
+};
+
+export interface STPResult {
+  totalTransferred: number;
+  finalValueOfInvestment: number;
+  totalGains: number;
+  breakdown: { year: number; valueInEquity: number; valueInDebt: number; totalValue: number }[];
+}
+
+export const calculateStp = (
+  lumpSumAmount: number,
+  monthlyTransferAmount: number,
+  transferPeriodYears: number,
+  equityFundReturn: number, // %
+  debtFundReturn: number // %
+): STPResult => {
+  const equityMonthlyRate = equityFundReturn / 100 / 12;
+  const debtMonthlyRate = debtFundReturn / 100 / 12;
+  const transferMonths = transferPeriodYears * 12;
+
+  let debtFundBalance = lumpSumAmount;
+  let equityFundBalance = 0;
+  const breakdown: STPResult['breakdown'] = [];
+
+  for (let month = 1; month <= transferMonths; month++) {
+    // Interest on debt fund
+    debtFundBalance *= (1 + debtMonthlyRate);
+
+    // Transfer amount
+    const transferAmount = Math.min(debtFundBalance, monthlyTransferAmount);
+    debtFundBalance -= transferAmount;
+    
+    // Grow equity fund
+    equityFundBalance *= (1 + equityMonthlyRate);
+    equityFundBalance += transferAmount;
+
+    if (month % 12 === 0) {
+      breakdown.push({
+        year: month / 12,
+        valueInEquity: equityFundBalance,
+        valueInDebt: debtFundBalance,
+        totalValue: equityFundBalance + debtFundBalance
+      });
+    }
+  }
+
+  // If debt fund still has balance after transfer period, let it grow
+  // This part is complex, assuming the user might want to see the total value after the transfer period ends.
+  // For simplicity, we can assume the simulation ends when transfers stop.
+  // Let's assume user wants to see the state right after the last transfer.
+
+  const totalTransferred = Math.min(lumpSumAmount, monthlyTransferAmount * transferMonths);
+  const finalValueOfInvestment = equityFundBalance + debtFundBalance;
+  const totalGains = finalValueOfInvestment - lumpSumAmount;
+  
+  if (transferMonths % 12 !== 0) {
+      breakdown.push({
+        year: transferPeriodYears,
+        valueInEquity: equityFundBalance,
+        valueInDebt: debtFundBalance,
+        totalValue: equityFundBalance + debtFundBalance
+      });
+  }
+
+  return {
+    totalTransferred,
+    finalValueOfInvestment,
+    totalGains,
+    breakdown,
+  };
+};
