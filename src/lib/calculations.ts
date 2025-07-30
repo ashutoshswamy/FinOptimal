@@ -65,6 +65,10 @@ export const calculateEmi = (loanAmount: number, annualRate: number, years: numb
   const monthlyRate = annualRate / 12 / 100;
   const tenureMonths = years * 12;
 
+  if (tenureMonths === 0) {
+    return { monthlyEMI: 0, totalInterest: 0, totalPayment: loanAmount, amortization: [] };
+  }
+
   if (monthlyRate === 0) {
     const monthlyEMI = loanAmount / tenureMonths;
     return {
@@ -101,4 +105,189 @@ export const calculateEmi = (loanAmount: number, annualRate: number, years: numb
   }
 
   return { monthlyEMI, totalInterest, totalPayment, amortization };
+};
+
+export type TransactionType = "intraday" | "delivery";
+
+export interface BrokerageInput {
+  buyPrice: number;
+  sellPrice: number;
+  quantity: number;
+  brokerage: number; // percentage
+  type: TransactionType;
+}
+
+export interface BrokerageResult {
+  buyValue: number;
+  sellValue: number;
+  turnover: number;
+  grossPandL: number;
+  netPandL: number;
+  totalCharges: number;
+  charges: {
+    brokerage: number;
+    stt: number;
+    transactionCharge: number;
+    gst: number;
+    sebiCharges: number;
+    stampDuty: number;
+  };
+}
+
+export const calculateBrokerage = (input: BrokerageInput): BrokerageResult => {
+    const { buyPrice, sellPrice, quantity, brokerage, type } = input;
+
+    const buyValue = buyPrice * quantity;
+    const sellValue = sellPrice * quantity;
+    const turnover = buyValue + sellValue;
+    const grossPandL = sellValue - buyValue;
+
+    const brokerageCharge = Math.min((turnover * brokerage) / 100, type === 'intraday' ? 40 : Infinity);
+    const stt = type === 'intraday'
+        ? (sellValue * 0.025) / 100
+        : (sellValue * 0.1) / 100;
+    
+    const transactionCharge = (turnover * 0.00345) / 100;
+    const gst = (brokerageCharge + transactionCharge) * 0.18;
+    const sebiCharges = (turnover * 10) / 10000000;
+    const stampDuty = (buyValue * (type === 'intraday' ? 0.003 : 0.015)) / 100;
+
+    const totalCharges = brokerageCharge + stt + transactionCharge + gst + sebiCharges + stampDuty;
+    const netPandL = grossPandL - totalCharges;
+
+    return {
+        buyValue,
+        sellValue,
+        turnover,
+        grossPandL,
+        netPandL,
+        totalCharges,
+        charges: {
+            brokerage: brokerageCharge,
+            stt,
+            transactionCharge,
+            gst,
+            sebiCharges,
+            stampDuty,
+        },
+    };
+};
+
+export interface TaxInput {
+    income: number;
+    deductions: number;
+    isSenior: boolean;
+}
+
+export interface TaxResult {
+    totalTax: number;
+    taxSlabs: { slab: string; tax: number }[];
+}
+
+export const calculateTax = (input: TaxInput): { oldRegime: TaxResult, newRegime: TaxResult } => {
+    const { income, deductions, isSenior } = input;
+
+    // Old Regime Calculation
+    const oldTaxableIncome = Math.max(0, income - deductions);
+    const oldSlabs = isSenior
+        ? [ { limit: 300000, rate: 0 }, { limit: 500000, rate: 0.05 }, { limit: 1000000, rate: 0.2 }, { limit: Infinity, rate: 0.3 } ]
+        : [ { limit: 250000, rate: 0 }, { limit: 500000, rate: 0.05 }, { limit: 1000000, rate: 0.2 }, { limit: Infinity, rate: 0.3 } ];
+    
+    const calculateTaxForRegime = (taxable: number, slabs: {limit: number, rate: number}[]) => {
+        let tax = 0;
+        let remainingIncome = taxable;
+        const slabDetails: {slab: string, tax: number}[] = [];
+        let lastLimit = 0;
+
+        for (const slab of slabs) {
+            if (remainingIncome > 0) {
+                const taxableInSlab = Math.min(remainingIncome, slab.limit - lastLimit);
+                const taxInSlab = taxableInSlab * slab.rate;
+                tax += taxInSlab;
+                remainingIncome -= taxableInSlab;
+                 slabDetails.push({ slab: `₹${lastLimit/100000}L - ₹${slab.limit/100000}L @ ${slab.rate * 100}%`, tax: taxInSlab });
+                lastLimit = slab.limit;
+                if (taxableInSlab === 0 && slab.rate > 0) break;
+            }
+        }
+        
+        const cess = tax * 0.04;
+        const totalTax = tax + cess;
+        slabDetails.push({ slab: 'Health & Edu Cess @ 4%', tax: cess });
+        return { totalTax, taxSlabs: slabDetails };
+    }
+
+    const oldRegimeResult = calculateTaxForRegime(oldTaxableIncome, oldSlabs);
+    
+    // New Regime Calculation
+    const newSlabs = [
+        { limit: 300000, rate: 0 }, { limit: 600000, rate: 0.05 }, { limit: 900000, rate: 0.1 },
+        { limit: 1200000, rate: 0.15 }, { limit: 1500000, rate: 0.2 }, { limit: Infinity, rate: 0.3 }
+    ];
+    const newRegimeResult = calculateTaxForRegime(income, newSlabs); // No deductions in new regime
+
+    return { oldRegime: oldRegimeResult, newRegime: newRegimeResult };
+};
+
+export interface RetirementInput {
+  currentAge: number;
+  retirementAge: number;
+  monthlyExpenses: number;
+  currentSavings: number;
+  monthlyInvestment: number;
+  preRetirementRate: number; // percentage
+  postRetirementRate: number; // percentage
+  inflationRate: number; // percentage
+  lifeExpectancy: number;
+}
+
+export interface RetirementResult {
+  corpusRequired: number;
+  corpusProjected: number;
+  difference: number;
+  monthlyExpensesAtRetirement: number;
+  additionalMonthlyInvestmentNeeded: number;
+}
+
+export const calculateRetirement = (input: RetirementInput): RetirementResult => {
+  const { currentAge, retirementAge, monthlyExpenses, currentSavings, monthlyInvestment, preRetirementRate, postRetirementRate, inflationRate, lifeExpectancy } = input;
+  
+  const yearsToRetire = retirementAge - currentAge;
+  const yearsInRetirement = lifeExpectancy - retirementAge;
+
+  // FV of current monthly expenses
+  const monthlyExpensesAtRetirement = monthlyExpenses * Math.pow(1 + inflationRate / 100, yearsToRetire);
+
+  // Corpus needed at retirement (using real rate of return)
+  const realReturnRate = ((1 + postRetirementRate / 100) / (1 + inflationRate / 100) - 1) * 100;
+  // PV of an annuity formula
+  const corpusRequired = (monthlyExpensesAtRetirement * 12) *
+                       ((1 - Math.pow(1 + realReturnRate / 100, -yearsInRetirement)) / (realReturnRate / 100));
+
+  // Projected corpus from current savings
+  const fvOfCurrentSavings = currentSavings * Math.pow(1 + preRetirementRate / 100, yearsToRetire);
+  
+  // Projected corpus from future investments
+  const monthlyPreRetirementRate = preRetirementRate / 100 / 12;
+  const fvOfFutureInvestments = monthlyInvestment *
+                                ((Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) / monthlyPreRetirementRate) *
+                                (1 + monthlyPreRetirementRate);
+
+  const corpusProjected = fvOfCurrentSavings + fvOfFutureInvestments;
+
+  const difference = corpusProjected - corpusRequired;
+
+  // Additional investment needed
+  const shortfall = Math.max(0, corpusRequired - fvOfCurrentSavings);
+  const additionalMonthlyInvestmentNeeded = shortfall > 0
+    ? (shortfall * monthlyPreRetirementRate) / (Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1)
+    : 0;
+  
+  return {
+    corpusRequired,
+    corpusProjected,
+    difference: Math.abs(difference),
+    monthlyExpensesAtRetirement,
+    additionalMonthlyInvestmentNeeded
+  };
 };
