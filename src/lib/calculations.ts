@@ -106,7 +106,7 @@ export const calculateEmi = (loanAmount: number, annualRate: number, years: numb
   const monthlyRate = annualRate / 12 / 100;
   const tenureMonths = years * 12;
 
-  if (tenureMonths === 0) {
+  if (tenureMonths <= 0 || loanAmount <= 0) {
     return { monthlyEMI: 0, totalInterest: 0, totalPayment: loanAmount, amortization: [] };
   }
 
@@ -298,35 +298,23 @@ export const calculateRetirement = (input: RetirementInput): RetirementResult =>
   const yearsToRetire = retirementAge - currentAge;
   const yearsInRetirement = lifeExpectancy - retirementAge;
 
+  if (yearsToRetire <=0 || yearsInRetirement <= 0) {
+    return { corpusRequired: 0, corpusProjected: 0, difference: 0, monthlyExpensesAtRetirement: 0, additionalMonthlyInvestmentNeeded: 0 };
+  }
+
   // FV of current monthly expenses
   const monthlyExpensesAtRetirement = monthlyExpenses * Math.pow(1 + inflationRate / 100, yearsToRetire);
 
   // Corpus needed at retirement (using real rate of return)
   const realReturnRate = ((1 + postRetirementRate / 100) / (1 + inflationRate / 100) - 1);
+  let corpusRequired;
 
   if (realReturnRate === 0) {
-    // Simplified calculation for zero real return rate
-    const corpusRequired = (monthlyExpensesAtRetirement * 12) * yearsInRetirement;
-    const fvOfCurrentSavings = currentSavings * Math.pow(1 + preRetirementRate / 100, yearsToRetire);
-    const monthlyPreRetirementRate = preRetirementRate / 100 / 12;
-    const fvOfFutureInvestments = monthlyInvestment * ((Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) / monthlyPreRetirementRate);
-    const corpusProjected = fvOfCurrentSavings + fvOfFutureInvestments;
-    const difference = corpusProjected - corpusRequired;
-    const shortfall = Math.max(0, corpusRequired - fvOfCurrentSavings);
-    const additionalMonthlyInvestmentNeeded = shortfall > 0 ? (shortfall * monthlyPreRetirementRate) / (Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) : 0;
-    
-    return {
-      corpusRequired,
-      corpusProjected,
-      difference: Math.abs(difference),
-      monthlyExpensesAtRetirement,
-      additionalMonthlyInvestmentNeeded
-    };
+    corpusRequired = (monthlyExpensesAtRetirement * 12) * yearsInRetirement;
+  } else {
+    // PV of an annuity formula
+    corpusRequired = (monthlyExpensesAtRetirement * 12) * ((1 - Math.pow(1 + realReturnRate, -yearsInRetirement)) / realReturnRate);
   }
-
-  // PV of an annuity formula
-  const corpusRequired = (monthlyExpensesAtRetirement * 12) * ((1 - Math.pow(1 + realReturnRate, -yearsInRetirement)) / realReturnRate);
-
 
   // Projected corpus from current savings
   const fvOfCurrentSavings = currentSavings * Math.pow(1 + preRetirementRate / 100, yearsToRetire);
@@ -368,6 +356,8 @@ export const calculateSwp = (initialInvestment: number, monthlyWithdrawal: numbe
   let balance = initialInvestment;
   const breakdown: SWPResult['breakdown'] = [{ year: 0, balance: initialInvestment }];
 
+  if (months <= 0) return { totalWithdrawal: 0, totalInterest: 0, finalBalance: initialInvestment, breakdown: []};
+
   for (let month = 1; month <= months; month++) {
     balance += balance * monthlyRate; // Add interest
     balance -= monthlyWithdrawal; // Subtract withdrawal
@@ -405,6 +395,9 @@ export const calculateNps = (input: NPSInput): NPSResult => {
   const { monthlyInvestment, currentAge, retirementAge, returnRate, annuityPercentage, annuityRate } = input;
   
   const investmentPeriod = retirementAge - currentAge;
+  if (investmentPeriod <= 0) {
+    return { totalInvestment: 0, totalInterest: 0, totalCorpus: 0, lumpSumValue: 0, monthlyPension: 0 };
+  }
   const months = investmentPeriod * 12;
   const monthlyRate = returnRate / 100 / 12;
   
@@ -474,7 +467,9 @@ export const calculateBlackScholes = (input: BlackScholesInput): BlackScholesRes
     const rPct = r / 100;
 
     if (T <= 0 || S <= 0 || K <= 0 || vol <= 0) {
-        return { callPrice: 0, putPrice: 0, callDelta: 0, putDelta: 0, gamma: 0, vega: 0, theta: 0, rho: 0 };
+        const putPrice = K > S ? K - S : 0;
+        const callPrice = S > K ? S - K : 0;
+        return { callPrice, putPrice, callDelta: S > K ? 1 : 0, putDelta: K > S ? -1: 0, gamma: 0, vega: 0, theta: 0, rho: 0 };
     }
 
     const d1 = (Math.log(S / K) + (rPct + (volPct * volPct) / 2) * T) / (volPct * Math.sqrt(T));
@@ -523,6 +518,10 @@ export const calculateStp = (
   equityFundReturn: number, // %
   debtFundReturn: number // %
 ): STPResult => {
+  if (transferPeriodYears <= 0) {
+    return { totalTransferred: 0, finalValueOfInvestment: lumpSumAmount, totalGains: 0, breakdown: []};
+  }
+
   const equityMonthlyRate = equityFundReturn / 100 / 12;
   const debtMonthlyRate = debtFundReturn / 100 / 12;
   const transferMonths = transferPeriodYears * 12;
@@ -576,5 +575,46 @@ export const calculateStp = (
     finalValueOfInvestment,
     totalGains,
     breakdown,
+  };
+};
+
+export interface MtfInput {
+  stockPrice: number;
+  quantity: number;
+  marginRequirement: number; // percentage, e.g., 20%
+  interestRate: number; // annual percentage
+  holdingPeriod: number; // in days
+}
+
+export interface MtfResult {
+  totalValue: number;
+  requiredMargin: number;
+  brokerFunding: number;
+  interestCost: number;
+  totalCost: number;
+}
+
+export const calculateMtf = (input: MtfInput): MtfResult => {
+  const { stockPrice, quantity, marginRequirement, interestRate, holdingPeriod } = input;
+
+  if (stockPrice <= 0 || quantity <= 0 || holdingPeriod < 0) {
+    return { totalValue: 0, requiredMargin: 0, brokerFunding: 0, interestCost: 0, totalCost: 0 };
+  }
+
+  const totalValue = stockPrice * quantity;
+  const requiredMargin = (totalValue * marginRequirement) / 100;
+  const brokerFunding = totalValue - requiredMargin;
+  
+  const dailyInterestRate = interestRate / 100 / 365;
+  const interestCost = brokerFunding * dailyInterestRate * holdingPeriod;
+  
+  const totalCost = requiredMargin + interestCost;
+
+  return {
+    totalValue,
+    requiredMargin,
+    brokerFunding,
+    interestCost,
+    totalCost,
   };
 };
