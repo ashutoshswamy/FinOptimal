@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Sparkles, Bot, Wand2, ArrowLeft } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
+import { marked } from "marked"
 
 export default function InsightsPage() {
   const [isPending, startTransition] = useTransition()
@@ -24,7 +25,8 @@ export default function InsightsPage() {
     startTransition(async () => {
       try {
         const result = await generateFinancialInsights({ financialSituation })
-        setInsight(result.explanation)
+        const html = await marked.parse(result.explanation);
+        setInsight(html)
       } catch (error) {
         console.error("Error generating financial insight:", error)
         toast({
@@ -106,7 +108,7 @@ export default function InsightsPage() {
             {insight && (
               <div
                 dangerouslySetInnerHTML={{
-                  __html: insight.replace(/\\n/g, "<br />"),
+                  __html: insight,
                 }}
               />
             )}

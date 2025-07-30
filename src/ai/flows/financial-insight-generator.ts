@@ -19,7 +19,7 @@ const FinancialInsightsInputSchema = z.object({
 export type FinancialInsightsInput = z.infer<typeof FinancialInsightsInputSchema>;
 
 const FinancialInsightsOutputSchema = z.object({
-  explanation: z.string().describe('A plain-English explanation of the factors influencing the financial decision.'),
+  explanation: z.string().describe('A plain-English explanation of the factors influencing the financial decision, formatted as Markdown.'),
 });
 export type FinancialInsightsOutput = z.infer<typeof FinancialInsightsOutputSchema>;
 
@@ -34,6 +34,8 @@ const prompt = ai.definePrompt({
   prompt: `You are a financial advisor whose job is to explain financial topics in plain English.
 
   Based on the following financial situation, provide a clear and concise explanation of the key factors influencing this financial decision. Make sure to provide reasoning for your explanation.
+
+  Format your response using Markdown for clear presentation, including headings, bullet points, and bold text where appropriate.
 
   Financial Situation: {{{financialSituation}}}`,
 });
