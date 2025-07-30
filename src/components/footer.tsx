@@ -14,9 +14,6 @@ export function Footer() {
           <p className="max-w-xs text-sm text-muted-foreground">
             A comprehensive suite of financial calculators to help you make informed decisions.
           </p>
-          <Link href="#" className="text-sm text-muted-foreground underline-offset-4 hover:text-primary hover:underline">
-            Disclaimer
-          </Link>
         </div>
 
         <div className="grid grid-cols-2 gap-8 md:col-span-2 md:grid-cols-3">
