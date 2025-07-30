@@ -17,7 +17,13 @@ export function Footer() {
         </div>
 
         <div className="grid grid-cols-2 gap-8 md:col-span-2 md:grid-cols-3">
-          <div className="space-y-4 md:col-start-2">
+          <div className="space-y-4">
+             <h3 className="font-semibold">Legal</h3>
+              <Link href="/disclaimer" className="text-sm text-muted-foreground hover:text-foreground">
+                Disclaimer
+              </Link>
+          </div>
+          <div className="space-y-4">
             <h3 className="font-semibold">Connect with Us</h3>
             <div className="flex items-center space-x-4">
               <Button asChild variant="ghost" size="icon">
