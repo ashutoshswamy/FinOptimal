@@ -7,7 +7,9 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { formatCurrency } from "@/lib/formatters"
 import { calculateTax, type TaxResult } from "@/lib/calculations"
-import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function TaxCalculatorPage() {
   const [income, setIncome] = useState(1000000)
@@ -50,9 +52,16 @@ export default function TaxCalculatorPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold font-headline">Income Tax Calculator</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">Compare your tax liability under the old and new tax regimes.</p>
+      <div className="flex items-center gap-4">
+        <Button asChild variant="outline" size="icon">
+            <Link href="/">
+                <ArrowLeft />
+            </Link>
+        </Button>
+        <div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline">Income Tax Calculator</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Compare your tax liability under the old and new tax regimes.</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">

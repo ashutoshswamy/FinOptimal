@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip as RechartsTooltip } from "recharts"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
@@ -10,6 +10,9 @@ import { formatCurrency } from "@/lib/formatters"
 import { calculateEmi, type EMIResult } from "@/lib/calculations"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--muted-foreground))'];
 
@@ -29,9 +32,16 @@ export default function EmiCalculatorPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold font-headline">EMI Calculator</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">Calculate your Equated Monthly Installment (EMI).</p>
+      <div className="flex items-center gap-4">
+        <Button asChild variant="outline" size="icon">
+            <Link href="/">
+                <ArrowLeft />
+            </Link>
+        </Button>
+        <div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline">EMI Calculator</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Calculate your Equated Monthly Installment (EMI).</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
@@ -112,7 +122,7 @@ export default function EmiCalculatorPage() {
           <CardDescription>A month-by-month breakdown of your loan repayment.</CardDescription>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-96">
+          <ScrollArea>
             <Table>
               <TableHeader className="sticky top-0 bg-background">
                 <TableRow>

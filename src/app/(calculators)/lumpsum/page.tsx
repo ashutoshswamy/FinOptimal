@@ -8,6 +8,10 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { formatCurrency } from "@/lib/formatters"
 import { calculateLumpsum, type LumpsumResult } from "@/lib/calculations"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
 
 const COLORS = ['hsl(var(--muted-foreground))', 'hsl(var(--primary))'];
 
@@ -27,9 +31,16 @@ export default function LumpsumCalculatorPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-        <div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-headline">Lumpsum Calculator</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">Calculate the future value of a one-time investment.</p>
+        <div className="flex items-center gap-4">
+            <Button asChild variant="outline" size="icon">
+                <Link href="/">
+                    <ArrowLeft />
+                </Link>
+            </Button>
+            <div>
+                <h1 className="text-2xl sm:text-3xl font-bold font-headline">Lumpsum Calculator</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Calculate the future value of a one-time investment.</p>
+            </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             <Card className="lg:col-span-1 h-fit">

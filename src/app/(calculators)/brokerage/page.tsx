@@ -8,6 +8,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { formatCurrency } from "@/lib/formatters"
 import { calculateBrokerage, type BrokerageResult, type TransactionType } from "@/lib/calculations"
 import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function BrokerageCalculatorPage() {
   const [buyPrice, setBuyPrice] = useState(100)
@@ -22,9 +25,16 @@ export default function BrokerageCalculatorPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold font-headline">Brokerage Calculator</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">Estimate the charges for your equity trades.</p>
+      <div className="flex items-center gap-4">
+        <Button asChild variant="outline" size="icon">
+            <Link href="/">
+                <ArrowLeft />
+            </Link>
+        </Button>
+        <div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline">Brokerage Calculator</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Estimate the charges for your equity trades.</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">

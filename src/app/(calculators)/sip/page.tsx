@@ -9,6 +9,9 @@ import { Slider } from "@/components/ui/slider"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { formatCurrency } from "@/lib/formatters"
 import { calculateSip, type SIPResult } from "@/lib/calculations"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function SipCalculatorPage() {
   const [monthlyInvestment, setMonthlyInvestment] = useState(10000)
@@ -27,9 +30,16 @@ export default function SipCalculatorPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-        <div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-headline">SIP Calculator</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">Estimate the future value of your monthly investments.</p>
+        <div className="flex items-center gap-4">
+            <Button asChild variant="outline" size="icon">
+                <Link href="/">
+                    <ArrowLeft />
+                </Link>
+            </Button>
+            <div>
+                <h1 className="text-2xl sm:text-3xl font-bold font-headline">SIP Calculator</h1>
+                <p className="text-sm sm:text-base text-muted-foreground">Estimate the future value of your monthly investments.</p>
+            </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             <Card className="lg:col-span-1 h-fit">

@@ -8,6 +8,9 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { formatCurrency } from "@/lib/formatters"
 import { calculateRetirement } from "@/lib/calculations"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function RetirementCalculatorPage() {
   const [currentAge, setCurrentAge] = useState(30)
@@ -43,9 +46,16 @@ export default function RetirementCalculatorPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold font-headline">Retirement Calculator</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">Plan for your golden years and see if you're on track.</p>
+      <div className="flex items-center gap-4">
+        <Button asChild variant="outline" size="icon">
+            <Link href="/">
+                <ArrowLeft />
+            </Link>
+        </Button>
+        <div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline">Retirement Calculator</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Plan for your golden years and see if you're on track.</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">

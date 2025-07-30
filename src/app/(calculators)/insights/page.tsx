@@ -7,8 +7,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Sparkles, Bot, Wand2 } from "lucide-react"
+import { Sparkles, Bot, Wand2, ArrowLeft } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link"
 
 export default function InsightsPage() {
   const [isPending, startTransition] = useTransition()
@@ -36,14 +37,21 @@ export default function InsightsPage() {
 
   return (
     <div className="space-y-6 md:space-y-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold font-headline flex items-center gap-2">
-          <Sparkles className="text-accent" />
-          Financial Insight Generator
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
-          Get AI-powered explanations for your financial questions and decisions.
-        </p>
+      <div className="flex items-center gap-4">
+        <Button asChild variant="outline" size="icon">
+            <Link href="/">
+                <ArrowLeft />
+            </Link>
+        </Button>
+        <div>
+            <h1 className="text-2xl sm:text-3xl font-bold font-headline flex items-center gap-2">
+              <Sparkles className="text-accent" />
+              Financial Insight Generator
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
+              Get AI-powered explanations for your financial questions and decisions.
+            </p>
+        </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         <Card>
