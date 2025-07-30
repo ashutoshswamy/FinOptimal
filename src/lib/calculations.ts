@@ -618,3 +618,88 @@ export const calculateMtf = (input: MtfInput): MtfResult => {
     totalCost,
   };
 };
+
+export interface EquityFuturesInput {
+  entryPrice: number;
+  exitPrice: number;
+  lotSize: number;
+  marginPercent: number;
+}
+
+export interface EquityFuturesResult {
+  contractValue: number;
+  requiredMargin: number;
+  pointsCaptured: number;
+  realizedPandL: number;
+  returnOnMargin: number; // percentage
+}
+
+export const calculateEquityFutures = (input: EquityFuturesInput): EquityFuturesResult => {
+  const { entryPrice, exitPrice, lotSize, marginPercent } = input;
+
+  if (entryPrice <= 0 || lotSize <= 0 || marginPercent <= 0) {
+    return { contractValue: 0, requiredMargin: 0, pointsCaptured: 0, realizedPandL: 0, returnOnMargin: 0 };
+  }
+
+  const contractValue = entryPrice * lotSize;
+  const requiredMargin = (contractValue * marginPercent) / 100;
+  const pointsCaptured = exitPrice - entryPrice;
+  const realizedPandL = pointsCaptured * lotSize;
+  const returnOnMargin = requiredMargin > 0 ? (realizedPandL / requiredMargin) * 100 : 0;
+  
+  return {
+    contractValue,
+    requiredMargin,
+    pointsCaptured,
+    realizedPandL,
+    returnOnMargin,
+  };
+};
+
+export interface FOMarginInput {
+  stockPrice: number;
+  strikePrice: number;
+  lotSize: number;
+  volatility: number;
+  riskFreeRate: number;
+  optionType: "call" | "put";
+}
+
+export interface FOMarginResult {
+  optionPremium: number;
+  totalMargin: number;
+  otmAmount: number;
+  exposureMargin: number;
+}
+
+// Simplified F&O Margin Calculation for shorting an option
+export const calculateFOMargin = (input: FOMarginInput): FOMarginResult => {
+  const { stockPrice, strikePrice, lotSize, volatility, riskFreeRate, optionType } = input;
+
+  // For simplicity, assuming time to expiry is ~1 week (0.0192 years)
+  const T = 7 / 365;
+  const bsResult = calculateBlackScholes({ stockPrice, strikePrice, timeToExpiry: T, volatility, riskFreeRate });
+
+  const optionPrice = optionType === 'call' ? bsResult.callPrice : bsResult.putPrice;
+  const optionPremium = optionPrice * lotSize;
+
+  // This is a gross simplification of exchange margin logic.
+  // It's meant for conceptual understanding only.
+  const otmAmount = optionType === 'call'
+    ? Math.max(0, strikePrice - stockPrice) * lotSize
+    : Math.max(0, stockPrice - strikePrice) * lotSize;
+
+  // Conceptual exposure margin (e.g., 20% of underlying value)
+  const underlyingValue = stockPrice * lotSize;
+  const exposureMargin = underlyingValue * 0.20;
+
+  // Simplified margin: Premium + Exposure - OTM Value
+  const totalMargin = optionPremium + exposureMargin - otmAmount;
+
+  return {
+    optionPremium,
+    totalMargin: Math.max(0, totalMargin), // Margin can't be negative
+    otmAmount,
+    exposureMargin,
+  };
+};
