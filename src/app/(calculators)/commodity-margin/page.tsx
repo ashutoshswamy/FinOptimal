@@ -18,7 +18,7 @@ export default function CommodityMarginCalculatorPage() {
           <p className="text-sm sm:text-base text-muted-foreground">Estimate margin requirements for commodity futures.</p>
         </div>
       </div>
-      <UnderConstruction message="It will help you calculate the margin for your commodity trades." />
+      <UnderConstruction message="It will help you calculate the SPAN and exposure margin required for your commodity futures trades." />
     </div>
   );
 }

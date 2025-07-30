@@ -18,7 +18,7 @@ export default function CurrencyDerivativesMarginCalculatorPage() {
           <p className="text-sm sm:text-base text-muted-foreground">Calculate margin for currency futures and options.</p>
         </div>
       </div>
-      <UnderConstruction message="It will help you calculate the margin required for currency derivative trades." />
+      <UnderConstruction message="It will help you calculate the margin required for currency derivative trades, including futures and options." />
     </div>
   );
 }

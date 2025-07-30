@@ -18,7 +18,7 @@ export default function EquityMarginCalculatorPage() {
           <p className="text-sm sm:text-base text-muted-foreground">Estimate margin requirements for equity trades.</p>
         </div>
       </div>
-      <UnderConstruction message="It will help you determine the margin needed for your equity positions." />
+      <UnderConstruction message="It will help you determine the margin needed for your equity positions, including SPAN and exposure margins." />
     </div>
   );
 }
