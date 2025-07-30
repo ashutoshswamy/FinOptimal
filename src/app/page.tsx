@@ -49,13 +49,13 @@ const calculators = [
 
 function CalculatorLink({ href, icon: Icon, label }: { href: string, icon: React.ElementType, label: string }) {
   return (
-    <Link href={href} className="group flex items-center gap-4 rounded-xl border bg-card text-card-foreground p-4 transition-all hover:border-primary/50 hover:bg-muted/50 hover:shadow-md">
+    <Link href={href} className="group flex flex-col items-start gap-4 rounded-xl border bg-card text-card-foreground p-4 transition-all hover:border-primary/50 hover:bg-muted/50 hover:shadow-md">
         <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
             <Icon className="w-6 h-6" />
         </div>
         <div className="flex-1">
             <h3 className="font-semibold text-base">{label}</h3>
-            <p className="text-sm text-muted-foreground transition-transform group-hover:translate-x-1">Calculate now &rarr;</p>
+            <p className="text-sm text-muted-foreground">Calculate now</p>
         </div>
     </Link>
   )
@@ -89,13 +89,10 @@ export default function HomePage() {
         </div>
       </header>
       
-      <main id="calculators" className="space-y-12 md:space-y-16 px-4 flex-grow">
-         <section className="space-y-8">
-            <h2 className="text-3xl sm:text-4xl font-bold font-headline text-center">Our Calculators</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                {calculators.map((calc) => <CalculatorLink key={calc.href} {...calc} />)}
-            </div>
-        </section>
+      <main id="calculators" className="flex-grow px-4 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            {calculators.map((calc) => <CalculatorLink key={calc.href} {...calc} />)}
+        </div>
       </main>
       <Footer />
     </div>
