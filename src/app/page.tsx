@@ -26,25 +26,25 @@ import { Footer } from "@/components/footer"
 
 const calculators = [
   // Investment
-  { href: "/sip", icon: Clock, label: "SIP Calculator" },
-  { href: "/lumpsum", icon: Briefcase, label: "Lumpsum Calculator" },
-  { href: "/step-up-sip", icon: TrendingUp, label: "Step-Up SIP Calculator" },
-  { href: "/retirement", icon: Goal, label: "Retirement Planner" },
-  { href: "/nps", icon: Shield, label: "NPS Calculator" },
-  { href: "/swp", icon: TrendingDown, label: "SWP Calculator" },
+  { href: "/calculators/sip", icon: Clock, label: "SIP Calculator" },
+  { href: "/calculators/lumpsum", icon: Briefcase, label: "Lumpsum Calculator" },
+  { href: "/calculators/step-up-sip", icon: TrendingUp, label: "Step-Up SIP Calculator" },
+  { href: "/calculators/retirement", icon: Goal, label: "Retirement Planner" },
+  { href: "/calculators/nps", icon: Shield, label: "NPS Calculator" },
+  { href: "/calculators/swp", icon: TrendingDown, label: "SWP Calculator" },
   // Loans & Taxes
-  { href: "/emi", icon: Landmark, label: "EMI Calculator" },
-  { href: "/tax", icon: ReceiptText, label: "Income Tax Calculator" },
+  { href: "/calculators/emi", icon: Landmark, label: "EMI Calculator" },
+  { href: "/calculators/tax", icon: ReceiptText, label: "Income Tax Calculator" },
   // Trading
-  { href: "/brokerage", icon: Percent, label: "Brokerage Calculator" },
-  { href: "/black-scholes", icon: Sigma, label: "Black-Scholes" },
-  { href: "/stp", icon: Repeat, label: "STP Calculator" },
-  { href: "/mtf", icon: Percent, label: "MTF Calculator" },
-  { href: "/fo-margin", icon: Briefcase, label: "F&O Margin" },
-  { href: "/equity-futures", icon: LineChart, label: "Equity Futures" },
-  { href: "/equity-margin", icon: BarChart, label: "Equity Margin" },
-  { href: "/commodity-margin", icon: CandlestickChart, label: "Commodity Margin" },
-  { href: "/currency-derivatives-margin", icon: CircleDollarSign, label: "Currency Derivatives" },
+  { href: "/calculators/brokerage", icon: Percent, label: "Brokerage Calculator" },
+  { href: "/calculators/black-scholes", icon: Sigma, label: "Black-Scholes" },
+  { href: "/calculators/stp", icon: Repeat, label: "STP Calculator" },
+  { href: "/calculators/mtf", icon: Percent, label: "MTF Calculator" },
+  { href: "/calculators/fo-margin", icon: Briefcase, label: "F&O Margin" },
+  { href: "/calculators/equity-futures", icon: LineChart, label: "Equity Futures" },
+  { href: "/calculators/equity-margin", icon: BarChart, label: "Equity Margin" },
+  { href: "/calculators/commodity-margin", icon: CandlestickChart, label: "Commodity Margin" },
+  { href: "/calculators/currency-derivatives-margin", icon: CircleDollarSign, label: "Currency Derivatives" },
 ]
 
 function CalculatorLink({ href, icon: Icon, label }: { href: string, icon: React.ElementType, label: string }) {
@@ -81,7 +81,7 @@ export default function HomePage() {
                 </a>
             </Button>
             <Button size="lg" variant="outline" asChild>
-                <Link href="/insights">
+                <Link href="/calculators/insights">
                     <Sparkles className="mr-2 h-5 w-5" />
                     Get AI Insights
                 </Link>
