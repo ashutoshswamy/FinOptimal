@@ -307,12 +307,20 @@ export const calculateRetirement = (input: RetirementInput): RetirementResult =>
   if (realReturnRate === 0) {
     // Simplified calculation for zero real return rate
     const corpusRequired = (monthlyExpensesAtRetirement * 12) * yearsInRetirement;
+    const fvOfCurrentSavings = currentSavings * Math.pow(1 + preRetirementRate / 100, yearsToRetire);
+    const monthlyPreRetirementRate = preRetirementRate / 100 / 12;
+    const fvOfFutureInvestments = monthlyInvestment * ((Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) / monthlyPreRetirementRate);
+    const corpusProjected = fvOfCurrentSavings + fvOfFutureInvestments;
+    const difference = corpusProjected - corpusRequired;
+    const shortfall = Math.max(0, corpusRequired - fvOfCurrentSavings);
+    const additionalMonthlyInvestmentNeeded = shortfall > 0 ? (shortfall * monthlyPreRetirementRate) / (Math.pow(1 + monthlyPreRetirementRate, yearsToRetire * 12) - 1) : 0;
+    
     return {
       corpusRequired,
-      corpusProjected: 0,
-      difference: -corpusRequired,
+      corpusProjected,
+      difference: Math.abs(difference),
       monthlyExpensesAtRetirement,
-      additionalMonthlyInvestmentNeeded: 0
+      additionalMonthlyInvestmentNeeded
     };
   }
 
@@ -358,7 +366,7 @@ export const calculateSwp = (initialInvestment: number, monthlyWithdrawal: numbe
   const monthlyRate = annualReturnRate / 100 / 12;
   const months = years * 12;
   let balance = initialInvestment;
-  const breakdown: SWPResult['breakdown'] = [];
+  const breakdown: SWPResult['breakdown'] = [{ year: 0, balance: initialInvestment }];
 
   for (let month = 1; month <= months; month++) {
     balance += balance * monthlyRate; // Add interest

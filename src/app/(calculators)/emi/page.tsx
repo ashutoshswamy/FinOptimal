@@ -122,7 +122,7 @@ export default function EmiCalculatorPage() {
           <CardDescription>A month-by-month breakdown of your loan repayment.</CardDescription>
         </CardHeader>
         <CardContent>
-          <ScrollArea>
+          <ScrollArea className="h-[400px]">
             <Table>
               <TableHeader className="sticky top-0 bg-background">
                 <TableRow>
